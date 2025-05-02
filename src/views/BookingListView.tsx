@@ -1,8 +1,29 @@
+/**
+ * BookingListView Component
+ * 
+ * This component displays a list of bookings and provides functionality
+ * to create, view, and delete bookings. It includes a header with a logout button
+ * and handles loading and error states.
+ * 
+ * @component
+ */
+
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useBookingViewModel } from '../viewmodels/BookingViewModel';
+import { useAuth } from '../context/AuthContext';
 
+/**
+ * BookingListView Component
+ * 
+ * Displays a list of bookings with the ability to create new bookings,
+ * delete existing ones, and logout from the application.
+ * 
+ * @component
+ * @returns {JSX.Element} The booking list view component
+ */
 export const BookingListView = () => {
+  // Get booking management functions from the ViewModel
   const {
     bookings,
     loading,
@@ -11,11 +32,19 @@ export const BookingListView = () => {
     createBooking,
     deleteBooking,
   } = useBookingViewModel();
+  
+  // Get logout function from auth context
+  const { logout } = useAuth();
 
+  // Fetch bookings when component mounts
   useEffect(() => {
     fetchBookings();
   }, [fetchBookings]);
 
+  /**
+   * Handles the creation of a new booking
+   * Creates a sample booking with default values
+   */
   const handleCreateBooking = async () => {
     try {
       await createBooking({
@@ -29,6 +58,7 @@ export const BookingListView = () => {
     }
   };
 
+  // Show loading indicator while fetching data
   if (loading) {
     return (
       <View style={styles.container}>
@@ -37,6 +67,7 @@ export const BookingListView = () => {
     );
   }
 
+  // Show error message if there's an error
   if (error) {
     return (
       <View style={styles.container}>
@@ -47,6 +78,13 @@ export const BookingListView = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Bookings</Text>
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
+      
       <TouchableOpacity style={styles.button} onPress={handleCreateBooking}>
         <Text style={styles.buttonText}>Create New Booking</Text>
       </TouchableOpacity>
@@ -72,11 +110,33 @@ export const BookingListView = () => {
   );
 };
 
+/**
+ * Styles for the BookingListView component
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    backgroundColor: '#FF3B30',
+    padding: 8,
+    borderRadius: 4,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   bookingItem: {
     padding: 16,
