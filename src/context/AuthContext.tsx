@@ -9,6 +9,7 @@
  */
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { BookingService } from '../services/BookingService';
 
 /**
  * Interface defining the shape of the authentication context
@@ -44,6 +45,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // State to track authentication status
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const bookingService = BookingService.getInstance();
 
   /**
    * Handles user login
@@ -64,7 +66,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
    * Handles user logout
    * Resets the authentication state
    */
-  const logout = () => {
+  const logout = async () => {
+    await bookingService.clearBookings();
     setIsAuthenticated(false);
   };
 
