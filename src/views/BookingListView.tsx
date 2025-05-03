@@ -8,7 +8,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { getHospitals } from '../services/ApiService';
 
@@ -79,59 +79,65 @@ export const HospitalListView = () => {
   // Show loading indicator while fetching data
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      </SafeAreaView>
     );
   }
 
   // Show error message if there's an error
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Text style={styles.error}>{error}</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Hospitals</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Hospitals</Text>
+          <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Available Hospitals</Text>
-        <FlatList
-          data={hospitals}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.hospitalItem}>
-              <Text style={styles.hospitalName}>{item.name}</Text>
-              <Text style={styles.hospitalAddress}>{item.address}</Text>
-              <Text style={styles.hospitalContact}>{item.contact}</Text>
-              <View style={styles.servicesContainer}>
-                <Text style={styles.servicesTitle}>Tests:</Text>
-                {item.tests.map((test: Test) => (
-                  <Text key={test.id} style={styles.serviceItem}>
-                    • {test.name} - ${test.price}
-                  </Text>
-                ))}
-                <Text style={styles.servicesTitle}>Services:</Text>
-                {item.services.map((service: Service) => (
-                  <Text key={service.id} style={styles.serviceItem}>
-                    • {service.name} - ${service.price}
-                  </Text>
-                ))}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Available Hospitals</Text>
+          <FlatList
+            data={hospitals}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.hospitalItem}>
+                <Text style={styles.hospitalName}>{item.name}</Text>
+                <Text style={styles.hospitalAddress}>{item.address}</Text>
+                <Text style={styles.hospitalContact}>{item.contact}</Text>
+                <View style={styles.servicesContainer}>
+                  <Text style={styles.servicesTitle}>Tests:</Text>
+                  {item.tests.map((test: Test) => (
+                    <Text key={test.id} style={styles.serviceItem}>
+                      • {test.name} - ${test.price}
+                    </Text>
+                  ))}
+                  <Text style={styles.servicesTitle}>Services:</Text>
+                  {item.services.map((service: Service) => (
+                    <Text key={service.id} style={styles.serviceItem}>
+                      • {service.name} - ${service.price}
+                    </Text>
+                  ))}
+                </View>
               </View>
-            </View>
-          )}
-        />
-      </View>
-    </ScrollView>
+            )}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -139,6 +145,10 @@ export const HospitalListView = () => {
  * Styles for the HospitalListView component
  */
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     padding: 16,
