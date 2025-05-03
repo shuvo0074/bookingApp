@@ -37,7 +37,7 @@ interface LoginScreenProps {
  * @param {LoginScreenProps} props - The props for the LoginScreen component
  * @returns {JSX.Element} The rendered login screen
  */
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   // State for form inputs
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -122,4 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-}); 
+});
+
+export default LoginScreen; 
