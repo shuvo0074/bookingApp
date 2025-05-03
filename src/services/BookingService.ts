@@ -123,9 +123,9 @@ export class BookingService {
    */
   async deleteBooking(id: string): Promise<boolean> {
     const initialLength = this.bookings.length;
-    this.bookings = this.bookings.filter(b => b.id !== id);
+    this.bookings = this.bookings.filter(b => b.id !== id); // Filter out the booking with the given ID
     await this.saveBookings();
-    return this.bookings.length !== initialLength;
+    return this.bookings.length !== initialLength; // Return true if booking was deleted, false if not found
   }
 
   /**
