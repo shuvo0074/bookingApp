@@ -145,7 +145,7 @@ const HospitalListView: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Hospitals</Text>
           <TouchableOpacity style={styles.logoutButton} onPress={logout}>
@@ -153,96 +153,157 @@ const HospitalListView: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Available Hospitals</Text>
-          <FlatList
-            data={hospitals}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.hospitalItem}>
-                <Text style={styles.hospitalName}>{item.name}</Text>
-                <Text style={styles.hospitalAddress}>{item.address}</Text>
-                <Text style={styles.hospitalContact}>{item.contact}</Text>
-                <View style={styles.servicesContainer}>
-                  <Text style={styles.servicesTitle}>Tests:</Text>
-                  {item.tests.map((test: Test) => (
-                    <View key={test.id} style={styles.itemContainer}>
-                      <Text style={styles.serviceItem}>
-                        • {test.name} - ${test.price}
-                      </Text>
-                      <TouchableOpacity
-                        style={styles.bookButton}
-                        onPress={() => handleBookItem(
-                          item.id,
-                          item.name,
-                          test.id,
-                          test.name,
-                          'test',
-                          test.price
-                        )}
-                      >
-                        <Text style={styles.bookButtonText}>Book</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                  <Text style={styles.servicesTitle}>Services:</Text>
-                  {item.services.map((service: Service) => (
-                    <View key={service.id} style={styles.itemContainer}>
-                      <Text style={styles.serviceItem}>
-                        • {service.name} - ${service.price}
-                      </Text>
-                      <TouchableOpacity
-                        style={styles.bookButton}
-                        onPress={() => handleBookItem(
-                          item.id,
-                          item.name,
-                          service.id,
-                          service.name,
-                          'service',
-                          service.price
-                        )}
-                      >
-                        <Text style={styles.bookButtonText}>Book</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-              </View>
-            )}
-          />
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Bookings</Text>
+        <View style={styles.contentContainer}>
           {bookings.length === 0 ? (
-            <Text style={styles.emptyText}>No bookings yet</Text>
+            <View style={styles.fullScreenSection}>
+              <Text style={styles.sectionTitle}>Available Hospitals</Text>
+              <FlatList
+                data={hospitals}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <View style={styles.hospitalItem}>
+                    <Text style={styles.hospitalName}>{item.name}</Text>
+                    <Text style={styles.hospitalAddress}>{item.address}</Text>
+                    <Text style={styles.hospitalContact}>{item.contact}</Text>
+                    <View style={styles.servicesContainer}>
+                      <Text style={styles.servicesTitle}>Tests:</Text>
+                      {item.tests.map((test: Test) => (
+                        <View key={test.id} style={styles.itemContainer}>
+                          <Text style={styles.serviceItem}>
+                            • {test.name} - ${test.price}
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.bookButton}
+                            onPress={() => handleBookItem(
+                              item.id,
+                              item.name,
+                              test.id,
+                              test.name,
+                              'test',
+                              test.price
+                            )}
+                          >
+                            <Text style={styles.bookButtonText}>Book</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                      <Text style={styles.servicesTitle}>Services:</Text>
+                      {item.services.map((service: Service) => (
+                        <View key={service.id} style={styles.itemContainer}>
+                          <Text style={styles.serviceItem}>
+                            • {service.name} - ${service.price}
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.bookButton}
+                            onPress={() => handleBookItem(
+                              item.id,
+                              item.name,
+                              service.id,
+                              service.name,
+                              'service',
+                              service.price
+                            )}
+                          >
+                            <Text style={styles.bookButtonText}>Book</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
           ) : (
-            <FlatList
-              data={bookings}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.bookingItem}>
-                  <Text style={styles.bookingHospital}>{item.hospitalName}</Text>
-                  <Text style={styles.bookingTitle}>{item.itemName}</Text>
-                  <Text style={styles.bookingDetails}>
-                    ${item.price}
-                  </Text>
-                  <Text style={styles.bookingDate}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </Text>
-                  <Text style={styles.bookingStatus}>Status: {item.status}</Text>
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => handleDeleteBooking(item.id)}
-                  >
-                    <Text style={styles.deleteButtonText}>Cancel Booking</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
+            <>
+              <View style={styles.hospitalsSection}>
+                <Text style={styles.sectionTitle}>Available Hospitals</Text>
+                <FlatList
+                  data={hospitals}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <View style={styles.hospitalItem}>
+                      <Text style={styles.hospitalName}>{item.name}</Text>
+                      <Text style={styles.hospitalAddress}>{item.address}</Text>
+                      <Text style={styles.hospitalContact}>{item.contact}</Text>
+                      <View style={styles.servicesContainer}>
+                        <Text style={styles.servicesTitle}>Tests:</Text>
+                        {item.tests.map((test: Test) => (
+                          <View key={test.id} style={styles.itemContainer}>
+                            <Text style={styles.serviceItem}>
+                              • {test.name} - ${test.price}
+                            </Text>
+                            <TouchableOpacity
+                              style={styles.bookButton}
+                              onPress={() => handleBookItem(
+                                item.id,
+                                item.name,
+                                test.id,
+                                test.name,
+                                'test',
+                                test.price
+                              )}
+                            >
+                              <Text style={styles.bookButtonText}>Book</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                        <Text style={styles.servicesTitle}>Services:</Text>
+                        {item.services.map((service: Service) => (
+                          <View key={service.id} style={styles.itemContainer}>
+                            <Text style={styles.serviceItem}>
+                              • {service.name} - ${service.price}
+                            </Text>
+                            <TouchableOpacity
+                              style={styles.bookButton}
+                              onPress={() => handleBookItem(
+                                item.id,
+                                item.name,
+                                service.id,
+                                service.name,
+                                'service',
+                                service.price
+                              )}
+                            >
+                              <Text style={styles.bookButtonText}>Book</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                />
+              </View>
+
+              <View style={styles.bookingsSection}>
+                <Text style={styles.sectionTitle}>Your Bookings</Text>
+                <FlatList
+                  data={bookings}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <View style={styles.bookingItem}>
+                      <Text style={styles.bookingHospital}>{item.hospitalName}</Text>
+                      <Text style={styles.bookingTitle}>{item.itemName}</Text>
+                      <Text style={styles.bookingDetails}>
+                        ${item.price}
+                      </Text>
+                      <Text style={styles.bookingDate}>
+                        {new Date(item.date).toLocaleDateString()}
+                      </Text>
+                      <Text style={styles.bookingStatus}>Status: {item.status}</Text>
+                      <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={() => handleDeleteBooking(item.id)}
+                      >
+                        <Text style={styles.deleteButtonText}>Cancel Booking</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                />
+              </View>
+            </>
           )}
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -259,14 +320,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   headerTitle: {
     fontSize: 24,
@@ -281,8 +343,23 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  section: {
-    marginBottom: 24,
+  contentContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  fullScreenSection: {
+    flex: 1,
+    padding: 16,
+  },
+  hospitalsSection: {
+    flex: 1,
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  bookingsSection: {
+    flex: 1,
+    padding: 16,
   },
   sectionTitle: {
     fontSize: 20,
