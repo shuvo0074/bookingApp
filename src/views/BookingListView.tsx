@@ -8,7 +8,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { getHospitals } from '../services/ApiService';
 import { BookingService } from '../services/BookingService';
