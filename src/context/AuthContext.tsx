@@ -29,7 +29,7 @@ interface AuthContextType {
  * 
  * @type {React.Context<AuthContextType | undefined>}
  */
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext: React.Context<AuthContextType | undefined> = createContext<AuthContextType | undefined>(undefined);
 
 /**
  * AuthProvider Component
@@ -56,8 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
    */
   const login = (username: string, password: string) => {
     // For demo purposes, we'll just check if both fields are filled
-    // In a real app, you would validate against a backend
-    if (username && password) {
+    if (username?.trim().length > 0 && password?.trim().length > 0) {
       setIsAuthenticated(true);
     }
   };
@@ -67,8 +66,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
    * Resets the authentication state
    */
   const logout = async () => {
-    await bookingService.clearBookings();
-    setIsAuthenticated(false);
+    await bookingService.clearBookings(); // Clear bookings
+    setIsAuthenticated(false); // Set authentication state to false
   };
 
   return (
@@ -84,7 +83,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
  * @returns {AuthContextType} The authentication context
  * @throws {Error} If used outside of AuthProvider
  */
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
