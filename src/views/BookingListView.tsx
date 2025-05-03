@@ -74,6 +74,10 @@ const HospitalListView: React.FC = () => {
     }
   };
 
+  /**
+   * Fetches bookings from the BookingService and updates the state
+   * Called when component mounts and after booking operations
+   */
   const fetchBookings = async () => {
     try {
       const data = await bookingService.getBookings();
@@ -83,6 +87,16 @@ const HospitalListView: React.FC = () => {
     }
   };
 
+  /**
+   * Handles booking creation for a specific hospital item (test or service)
+   * 
+   * @param {string} hospitalId - ID of the hospital
+   * @param {string} hospitalName - Name of the hospital
+   * @param {string} itemId - ID of the test or service
+   * @param {string} itemName - Name of the test or service
+   * @param {'test' | 'service'} itemType - Type of the item being booked
+   * @param {number} price - Price of the item
+   */
   const handleBookItem = async (
     hospitalId: string,
     hospitalName: string,
@@ -118,6 +132,11 @@ const HospitalListView: React.FC = () => {
     }
   };
 
+  /**
+   * Handles deletion of a booking
+   * 
+   * @param {string} id - ID of the booking to delete
+   */
   const handleDeleteBooking = async (id: string) => {
     try {
       const success = await bookingService.deleteBooking(id);
@@ -131,6 +150,12 @@ const HospitalListView: React.FC = () => {
     }
   };
 
+  /**
+   * Toggles the expanded state of a hospital's test or service section
+   * 
+   * @param {string} hospitalId - ID of the hospital
+   * @param {'tests' | 'services'} sectionType - Type of section to toggle
+   */
   const toggleSection = (hospitalId: string, sectionType: 'tests' | 'services') => {
     const key = `${hospitalId}-${sectionType}`;
     setExpandedSections(prev => ({
@@ -139,6 +164,12 @@ const HospitalListView: React.FC = () => {
     }));
   };
 
+  /**
+   * Renders a single hospital item with its tests and services
+   * 
+   * @param {{ item: Hospital }} - Object containing the hospital data
+   * @returns {JSX.Element} The rendered hospital item
+   */
   const renderHospitalItem = ({ item }: { item: Hospital }) => (
     <View style={styles.hospitalItem}>
       <Text style={styles.hospitalName}>{item.name}</Text>
