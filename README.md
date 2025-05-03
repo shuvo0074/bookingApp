@@ -48,3 +48,88 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+# Hospital Booking App Backend
+
+A React Native application for booking hospital tests and services.
+
+## Backend Setup and Documentation
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Backend Structure
+The backend is a simple Node.js server that provides:
+- RESTful API endpoints for hospital data
+- Local storage for bookings
+- Authentication endpoints
+
+### How to Run the Backend
+
+1. Navigate to the backend directory:
+```bash
+cd bookingBackend
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the server:
+```bash
+npm start
+# or
+yarn start
+```
+
+The server will start on `http://localhost:3000` by default.
+
+### Backend Architecture
+
+The backend consists of several key components:
+
+1. **Server Setup (`server.js`)**
+   - Express server configuration
+   - CORS middleware for cross-origin requests
+   - Body parser for JSON requests
+   - Static file serving for hospital data
+
+2. **Data Storage**
+   - Hospital data is stored in `data/hospitals.json`
+   - Bookings are stored in memory using `BookingService`
+   - Data persistence is handled through local storage
+
+3. **API Endpoints**
+   - `GET /api/hospitals` - Returns list of hospitals with tests and services
+   
+4. **Authentication**
+   - NONE! 
+
+
+### Testing the Backend
+
+You can test the backend using tools like Postman or curl:
+
+```bash
+# Get all hospitals
+curl http://localhost:3000/api/hospitals
+
+### Troubleshooting
+
+If you encounter any issues:
+
+1. Verify the port is not in use:
+```bash
+lsof -i :3000
+```
+
+3. Check the server logs for any error messages
+
+### Security Considerations
+
+- CORS is configured to allow requests from the React Native app
+- Sensitive data is not stored in plain text
