@@ -8,9 +8,11 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { getHospitals } from '../services/ApiService';
+import { BookingService } from '../services/BookingService';
+import { Booking } from '../models/Booking';
 
 interface Test {
   id: string;
@@ -37,26 +39,20 @@ interface Hospital {
   services: Service[];
 }
 
-/**
- * HospitalListView Component
- * 
- * Displays a list of hospitals with their available tests and services.
- * 
- * @component
- * @returns {JSX.Element} The hospital list view component
- */
-export const HospitalListView = () => {
-  // Get logout function from auth context
+const HospitalListView: React.FC = () => {
   const { logout } = useAuth();
+  const bookingService = BookingService.getInstance();
 
-  // State for hospitals
+  // State for hospitals and bookings
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch hospitals when component mounts
+  // Fetch hospitals and bookings when component mounts
   useEffect(() => {
     fetchHospitals();
+    fetchBookings();
   }, []);
 
   /**
@@ -73,6 +69,55 @@ export const HospitalListView = () => {
       console.error('Failed to fetch hospitals:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBookings = async () => {
+    try {
+      const data = await bookingService.getBookings();
+      setBookings(data);
+    } catch (err) {
+      console.error('Failed to fetch bookings:', err);
+    }
+  };
+
+  const handleBookItem = async (
+    hospitalId: string,
+    hospitalName: string,
+    itemId: string,
+    itemName: string,
+    itemType: 'test' | 'service',
+    price: number
+  ) => {
+    try {
+      const booking = await bookingService.createBooking({
+        hospitalId,
+        hospitalName,
+        itemId,
+        itemName,
+        itemType,
+        price,
+        date: new Date().toISOString(),
+        status: 'pending'
+      });
+      setBookings(prev => [...prev, booking]);
+      Alert.alert('Success', 'Booking created successfully!');
+    } catch (err) {
+      Alert.alert('Error', 'Failed to create booking');
+      console.error('Failed to create booking:', err);
+    }
+  };
+
+  const handleDeleteBooking = async (id: string) => {
+    try {
+      const success = await bookingService.deleteBooking(id);
+      if (success) {
+        setBookings(prev => prev.filter(b => b.id !== id));
+        Alert.alert('Success', 'Booking deleted successfully!');
+      }
+    } catch (err) {
+      Alert.alert('Error', 'Failed to delete booking');
+      console.error('Failed to delete booking:', err);
     }
   };
 
@@ -121,25 +166,88 @@ export const HospitalListView = () => {
                 <View style={styles.servicesContainer}>
                   <Text style={styles.servicesTitle}>Tests:</Text>
                   {item.tests.map((test: Test) => (
-                    <Text key={test.id} style={styles.serviceItem}>
-                      • {test.name} - ${test.price}
-                    </Text>
+                    <View key={test.id} style={styles.itemContainer}>
+                      <Text style={styles.serviceItem}>
+                        • {test.name} - ${test.price}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.bookButton}
+                        onPress={() => handleBookItem(
+                          item.id,
+                          item.name,
+                          test.id,
+                          test.name,
+                          'test',
+                          test.price
+                        )}
+                      >
+                        <Text style={styles.bookButtonText}>Book</Text>
+                      </TouchableOpacity>
+                    </View>
                   ))}
                   <Text style={styles.servicesTitle}>Services:</Text>
                   {item.services.map((service: Service) => (
-                    <Text key={service.id} style={styles.serviceItem}>
-                      • {service.name} - ${service.price}
-                    </Text>
+                    <View key={service.id} style={styles.itemContainer}>
+                      <Text style={styles.serviceItem}>
+                        • {service.name} - ${service.price}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.bookButton}
+                        onPress={() => handleBookItem(
+                          item.id,
+                          item.name,
+                          service.id,
+                          service.name,
+                          'service',
+                          service.price
+                        )}
+                      >
+                        <Text style={styles.bookButtonText}>Book</Text>
+                      </TouchableOpacity>
+                    </View>
                   ))}
                 </View>
               </View>
             )}
           />
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Your Bookings</Text>
+          {bookings.length === 0 ? (
+            <Text style={styles.emptyText}>No bookings yet</Text>
+          ) : (
+            <FlatList
+              data={bookings}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.bookingItem}>
+                  <Text style={styles.bookingHospital}>{item.hospitalName}</Text>
+                  <Text style={styles.bookingTitle}>{item.itemName}</Text>
+                  <Text style={styles.bookingDetails}>
+                    ${item.price}
+                  </Text>
+                  <Text style={styles.bookingDate}>
+                    {new Date(item.date).toLocaleDateString()}
+                  </Text>
+                  <Text style={styles.bookingStatus}>Status: {item.status}</Text>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteBooking(item.id)}
+                  >
+                    <Text style={styles.deleteButtonText}>Cancel Booking</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
+export default HospitalListView;
 
 /**
  * Styles for the HospitalListView component
@@ -213,10 +321,79 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 4,
   },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 8,
+    marginBottom: 4,
+  },
   serviceItem: {
     fontSize: 14,
     color: '#666',
+    flex: 1,
+  },
+  bookButton: {
+    backgroundColor: '#007AFF',
+    padding: 6,
+    borderRadius: 4,
     marginLeft: 8,
+  },
+  bookButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  bookingItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginBottom: 12,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
+  },
+  bookingHospital: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#333',
+  },
+  bookingTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#000',
+  },
+  bookingDetails: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  bookingDate: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  bookingStatus: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  deleteButton: {
+    backgroundColor: '#FF3B30',
+    padding: 8,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#666',
+    marginTop: 16,
   },
   error: {
     color: '#FF3B30',
