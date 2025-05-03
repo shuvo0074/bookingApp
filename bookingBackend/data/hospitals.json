@@ -1,0 +1,302 @@
+{
+  "hospitals": [
+    {
+      "id": "1",
+      "name": "City General Hospital",
+      "address": "123 Main Street, City",
+      "contact": "+1 234-567-8900",
+      "tests": [
+        {
+          "id": "t1",
+          "name": "Blood Test",
+          "price": 50,
+          "duration": "30 minutes",
+          "description": "Complete blood count and basic metabolic panel"
+        },
+        {
+          "id": "t2",
+          "name": "X-Ray",
+          "price": 100,
+          "duration": "1 hour",
+          "description": "Standard X-Ray imaging"
+        },
+        {
+          "id": "t3",
+          "name": "MRI Scan",
+          "price": 500,
+          "duration": "2 hours",
+          "description": "Magnetic Resonance Imaging"
+        }
+      ],
+      "services": [
+        {
+          "id": "s1",
+          "name": "General Checkup",
+          "price": 150,
+          "duration": "1 hour",
+          "description": "Comprehensive health checkup"
+        },
+        {
+          "id": "s2",
+          "name": "Dental Cleaning",
+          "price": 80,
+          "duration": "45 minutes",
+          "description": "Professional dental cleaning"
+        },
+        {
+          "id": "s3",
+          "name": "Physical Therapy",
+          "price": 120,
+          "duration": "1 hour",
+          "description": "One-on-one physical therapy session"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Metropolitan Medical Center",
+      "address": "456 Oak Avenue, Metro City",
+      "contact": "+1 987-654-3210",
+      "tests": [
+        {
+          "id": "t4",
+          "name": "ECG",
+          "price": 75,
+          "duration": "45 minutes",
+          "description": "Electrocardiogram test"
+        },
+        {
+          "id": "t5",
+          "name": "Ultrasound",
+          "price": 200,
+          "duration": "1 hour",
+          "description": "Diagnostic ultrasound"
+        }
+      ],
+      "services": [
+        {
+          "id": "s4",
+          "name": "Eye Examination",
+          "price": 90,
+          "duration": "1 hour",
+          "description": "Comprehensive eye checkup"
+        },
+        {
+          "id": "s5",
+          "name": "Vaccination",
+          "price": 60,
+          "duration": "30 minutes",
+          "description": "Standard vaccination service"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Children's Specialty Hospital",
+      "address": "789 Park Lane, Suburbia",
+      "contact": "+1 555-123-4567",
+      "tests": [
+        {
+          "id": "t6",
+          "name": "Pediatric Blood Test",
+          "price": 65,
+          "duration": "45 minutes",
+          "description": "Child-friendly blood testing with specialized equipment"
+        },
+        {
+          "id": "t7",
+          "name": "Growth Assessment",
+          "price": 85,
+          "duration": "1 hour",
+          "description": "Comprehensive growth and development evaluation"
+        },
+        {
+          "id": "t8",
+          "name": "Allergy Testing",
+          "price": 150,
+          "duration": "2 hours",
+          "description": "Comprehensive allergy panel for children"
+        }
+      ],
+      "services": [
+        {
+          "id": "s6",
+          "name": "Pediatric Consultation",
+          "price": 120,
+          "duration": "45 minutes",
+          "description": "Specialized consultation with pediatric specialists"
+        },
+        {
+          "id": "s7",
+          "name": "Child Vaccination",
+          "price": 75,
+          "duration": "30 minutes",
+          "description": "Child-friendly vaccination service"
+        },
+        {
+          "id": "s8",
+          "name": "Child Development Assessment",
+          "price": 200,
+          "duration": "1.5 hours",
+          "description": "Comprehensive child development evaluation"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Advanced Cardiac Center",
+      "address": "321 Heart Street, Downtown",
+      "contact": "+1 888-555-1234",
+      "tests": [
+        {
+          "id": "t9",
+          "name": "Stress Test",
+          "price": 250,
+          "duration": "1.5 hours",
+          "description": "Cardiac stress test with ECG monitoring"
+        },
+        {
+          "id": "t10",
+          "name": "Echocardiogram",
+          "price": 300,
+          "duration": "1 hour",
+          "description": "Detailed heart ultrasound examination"
+        },
+        {
+          "id": "t11",
+          "name": "Holter Monitor",
+          "price": 180,
+          "duration": "24 hours",
+          "description": "24-hour heart rhythm monitoring"
+        }
+      ],
+      "services": [
+        {
+          "id": "s9",
+          "name": "Cardiac Consultation",
+          "price": 200,
+          "duration": "1 hour",
+          "description": "Specialized consultation with cardiologists"
+        },
+        {
+          "id": "s10",
+          "name": "Cardiac Rehabilitation",
+          "price": 150,
+          "duration": "1 hour",
+          "description": "Supervised exercise program for heart patients"
+        },
+        {
+          "id": "s11",
+          "name": "Pacemaker Check",
+          "price": 120,
+          "duration": "30 minutes",
+          "description": "Routine pacemaker function assessment"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Women's Health Center",
+      "address": "555 Wellness Avenue, Medical District",
+      "contact": "+1 777-888-9999",
+      "tests": [
+        {
+          "id": "t12",
+          "name": "Mammogram",
+          "price": 150,
+          "duration": "45 minutes",
+          "description": "Breast cancer screening"
+        },
+        {
+          "id": "t13",
+          "name": "Pap Smear",
+          "price": 100,
+          "duration": "30 minutes",
+          "description": "Cervical cancer screening"
+        },
+        {
+          "id": "t14",
+          "name": "Bone Density Scan",
+          "price": 200,
+          "duration": "1 hour",
+          "description": "Osteoporosis screening"
+        }
+      ],
+      "services": [
+        {
+          "id": "s12",
+          "name": "Prenatal Care",
+          "price": 180,
+          "duration": "1 hour",
+          "description": "Comprehensive pregnancy care"
+        },
+        {
+          "id": "s13",
+          "name": "Gynecological Consultation",
+          "price": 150,
+          "duration": "45 minutes",
+          "description": "Specialized women's health consultation"
+        },
+        {
+          "id": "s14",
+          "name": "Family Planning",
+          "price": 120,
+          "duration": "1 hour",
+          "description": "Contraception and family planning services"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Orthopedic Specialists",
+      "address": "888 Joint Street, Sports District",
+      "contact": "+1 333-444-5555",
+      "tests": [
+        {
+          "id": "t15",
+          "name": "Joint X-Ray",
+          "price": 120,
+          "duration": "45 minutes",
+          "description": "Detailed joint imaging"
+        },
+        {
+          "id": "t16",
+          "name": "Bone Scan",
+          "price": 250,
+          "duration": "2 hours",
+          "description": "Comprehensive bone imaging"
+        },
+        {
+          "id": "t17",
+          "name": "Muscle Function Test",
+          "price": 180,
+          "duration": "1 hour",
+          "description": "Muscle strength and function assessment"
+        }
+      ],
+      "services": [
+        {
+          "id": "s15",
+          "name": "Sports Injury Consultation",
+          "price": 160,
+          "duration": "45 minutes",
+          "description": "Specialized sports injury assessment"
+        },
+        {
+          "id": "s16",
+          "name": "Joint Injection",
+          "price": 200,
+          "duration": "30 minutes",
+          "description": "Therapeutic joint injection"
+        },
+        {
+          "id": "s17",
+          "name": "Physical Therapy",
+          "price": 140,
+          "duration": "1 hour",
+          "description": "Specialized orthopedic physical therapy"
+        }
+      ]
+    }
+  ]
+} 
