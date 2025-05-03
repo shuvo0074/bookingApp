@@ -1,60 +1,78 @@
 /**
- * BookingListView Component
+ * HospitalListView Component
  * 
- * This component displays a list of bookings and provides functionality
- * to create, view, and delete bookings. It includes a header with a logout button
- * and handles loading and error states.
+ * This component displays a list of hospitals with their available tests and services.
+ * It includes a header with a logout button and handles loading and error states.
  * 
  * @component
  */
 
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useBookingViewModel } from '../viewmodels/BookingViewModel';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { getHospitals } from '../services/ApiService';
+
+interface Test {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  description: string;
+}
+
+interface Service {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  description: string;
+}
+
+interface Hospital {
+  id: string;
+  name: string;
+  address: string;
+  contact: string;
+  tests: Test[];
+  services: Service[];
+}
 
 /**
- * BookingListView Component
+ * HospitalListView Component
  * 
- * Displays a list of bookings with the ability to create new bookings,
- * delete existing ones, and logout from the application.
+ * Displays a list of hospitals with their available tests and services.
  * 
  * @component
- * @returns {JSX.Element} The booking list view component
+ * @returns {JSX.Element} The hospital list view component
  */
-export const BookingListView = () => {
-  // Get booking management functions from the ViewModel
-  const {
-    bookings,
-    loading,
-    error,
-    fetchBookings,
-    createBooking,
-    deleteBooking,
-  } = useBookingViewModel();
-  
+export const HospitalListView = () => {
   // Get logout function from auth context
   const { logout } = useAuth();
 
-  // Fetch bookings when component mounts
+  // State for hospitals
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch hospitals when component mounts
   useEffect(() => {
-    fetchBookings();
-  }, [fetchBookings]);
+    fetchHospitals();
+  }, []);
 
   /**
-   * Handles the creation of a new booking
-   * Creates a sample booking with default values
+   * Fetches hospitals from the backend
    */
-  const handleCreateBooking = async () => {
+  const fetchHospitals = async () => {
     try {
-      await createBooking({
-        title: 'New Booking',
-        date: new Date(),
-        status: 'pending',
-        description: 'Sample booking',
-      });
+      setLoading(true);
+      setError(null);
+      const data = await getHospitals();
+      setHospitals(data);
     } catch (err) {
-      console.error('Failed to create booking:', err);
+      setError('Failed to fetch hospitals');
+      console.error('Failed to fetch hospitals:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,41 +95,48 @@ export const BookingListView = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Bookings</Text>
+        <Text style={styles.headerTitle}>Hospitals</Text>
         <TouchableOpacity style={styles.logoutButton} onPress={logout}>
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
-      
-      <TouchableOpacity style={styles.button} onPress={handleCreateBooking}>
-        <Text style={styles.buttonText}>Create New Booking</Text>
-      </TouchableOpacity>
-      
-      <FlatList
-        data={bookings}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.bookingItem}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.date}>{item.date.toLocaleDateString()}</Text>
-            <Text style={styles.status}>{item.status}</Text>
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => deleteBooking(item.id)}
-            >
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
-    </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Available Hospitals</Text>
+        <FlatList
+          data={hospitals}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.hospitalItem}>
+              <Text style={styles.hospitalName}>{item.name}</Text>
+              <Text style={styles.hospitalAddress}>{item.address}</Text>
+              <Text style={styles.hospitalContact}>{item.contact}</Text>
+              <View style={styles.servicesContainer}>
+                <Text style={styles.servicesTitle}>Tests:</Text>
+                {item.tests.map((test: Test) => (
+                  <Text key={test.id} style={styles.serviceItem}>
+                    • {test.name} - ${test.price}
+                  </Text>
+                ))}
+                <Text style={styles.servicesTitle}>Services:</Text>
+                {item.services.map((service: Service) => (
+                  <Text key={service.id} style={styles.serviceItem}>
+                    • {service.name} - ${service.price}
+                  </Text>
+                ))}
+              </View>
+            </View>
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
 /**
- * Styles for the BookingListView component
+ * Styles for the HospitalListView component
  */
 const styles = StyleSheet.create({
   container: {
@@ -138,44 +163,50 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  bookingItem: {
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  hospitalItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    marginBottom: 12,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
   },
-  title: {
+  hospitalName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 4,
   },
-  date: {
+  hospitalAddress: {
     fontSize: 14,
     color: '#666',
+    marginBottom: 4,
   },
-  status: {
+  hospitalContact: {
     fontSize: 14,
     color: '#666',
-    marginTop: 4,
+    marginBottom: 8,
   },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  deleteButton: {
-    backgroundColor: '#FF3B30',
-    padding: 8,
-    borderRadius: 4,
+  servicesContainer: {
     marginTop: 8,
   },
-  deleteButtonText: {
-    color: '#fff',
-    textAlign: 'center',
+  servicesTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  serviceItem: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 8,
   },
   error: {
     color: '#FF3B30',

@@ -8,11 +8,14 @@
  * @component
  */
 
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
-import { BookingListView } from './src/views/BookingListView';
-import { LoginScreen } from './src/views/LoginScreen';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
+import { LoginScreen } from './src/views/LoginScreen';
+import { HospitalListView } from './src/views/BookingListView';
+
+const Stack = createNativeStackNavigator();
 
 /**
  * AppContent Component
@@ -23,20 +26,28 @@ import { AuthProvider, useAuth } from './src/context/AuthContext';
  * @component
  * @returns {JSX.Element} The appropriate screen based on authentication state
  */
-function AppContent() {
+const AppContent = () => {
   const { isAuthenticated, login } = useAuth();
 
-  if (!isAuthenticated) {
-    return <LoginScreen onLogin={login} />;
-  }
-
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      <BookingListView />
-    </SafeAreaView>
+    <Stack.Navigator>
+      {!isAuthenticated ? (
+        <Stack.Screen 
+          name="Login" 
+          options={{ headerShown: false }}
+        >
+          {(props) => <LoginScreen {...props} onLogin={login} />}
+        </Stack.Screen>
+      ) : (
+        <Stack.Screen 
+          name="Hospitals" 
+          component={HospitalListView} 
+          options={{ headerShown: false }}
+        />
+      )}
+    </Stack.Navigator>
   );
-}
+};
 
 /**
  * Main App Component
@@ -50,17 +61,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <NavigationContainer>
+        <AppContent />
+      </NavigationContainer>
     </AuthProvider>
   );
-}
-
-/**
- * Styles for the App component
- */
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-}); 
+} 
