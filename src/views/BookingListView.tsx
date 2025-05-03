@@ -88,6 +88,20 @@ const HospitalListView: React.FC = () => {
   };
 
   /**
+   * Generates a random date at least 24 hours in the future
+   * 
+   * @returns {string} ISO string of the random future date
+   */
+  const generateRandomFutureDate = (): string => {
+    const now = new Date();
+    const minHours = 24;
+    const maxHours = 168; // 7 days
+    const randomHours = Math.floor(Math.random() * (maxHours - minHours + 1)) + minHours;
+    const futureDate = new Date(now.getTime() + randomHours * 60 * 60 * 1000);
+    return futureDate.toISOString();
+  };
+
+  /**
    * Handles booking creation for a specific hospital item (test or service)
    * 
    * @param {string} hospitalId - ID of the hospital
@@ -114,7 +128,7 @@ const HospitalListView: React.FC = () => {
         itemName,
         itemType,
         price,
-        date: new Date().toISOString(),
+        date: generateRandomFutureDate(),
         status: 'pending'
       });
 
