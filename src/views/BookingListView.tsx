@@ -49,7 +49,7 @@ const HospitalListView: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [expandedSections, setExpandedSections] = useState<{[key: string]: boolean}>({});
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
 
   // Fetch hospitals and bookings when component mounts
   useEffect(() => {
@@ -92,6 +92,7 @@ const HospitalListView: React.FC = () => {
     price: number
   ) => {
     try {
+      setLoading(true);
       const booking = await bookingService.createBooking({
         hospitalId,
         hospitalName,
@@ -102,11 +103,18 @@ const HospitalListView: React.FC = () => {
         date: new Date().toISOString(),
         status: 'pending'
       });
-      setBookings(prev => [...prev, booking]);
-      Alert.alert('Success', 'Booking created successfully!');
-    } catch (err) {
+
+      // Check if booking with same ID already exists in state
+      const isDuplicate = bookings.some(b => b.id === booking.id);
+      if (!isDuplicate) {
+        setBookings(prev => [...prev, booking]);
+        Alert.alert('Success', 'Booking created successfully!');
+      }
+    } catch (error) {
+      console.error('Error creating booking:', error);
       Alert.alert('Error', 'Failed to create booking');
-      console.error('Failed to create booking:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,17 +144,17 @@ const HospitalListView: React.FC = () => {
       <Text style={styles.hospitalName}>{item.name}</Text>
       <Text style={styles.hospitalAddress}>{item.address}</Text>
       <Text style={styles.hospitalContact}>{item.contact}</Text>
-      
+
       <View style={styles.servicesContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.sectionHeader}
           onPress={() => toggleSection(item.id, 'tests')}
         >
           <Text style={styles.servicesTitle}>Tests</Text>
-          <Ionicons 
-            name={expandedSections[`${item.id}-tests`] ? 'chevron-up' : 'chevron-down'} 
-            size={24} 
-            color="#666" 
+          <Ionicons
+            name={expandedSections[`${item.id}-tests`] ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#666"
           />
         </TouchableOpacity>
         {expandedSections[`${item.id}-tests`] && item.tests.map((test: Test) => (
@@ -170,15 +178,15 @@ const HospitalListView: React.FC = () => {
           </View>
         ))}
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.sectionHeader}
           onPress={() => toggleSection(item.id, 'services')}
         >
           <Text style={styles.servicesTitle}>Services</Text>
-          <Ionicons 
-            name={expandedSections[`${item.id}-services`] ? 'chevron-up' : 'chevron-down'} 
-            size={24} 
-            color="#666" 
+          <Ionicons
+            name={expandedSections[`${item.id}-services`] ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#666"
           />
         </TouchableOpacity>
         {expandedSections[`${item.id}-services`] && item.services.map((service: Service) => (
